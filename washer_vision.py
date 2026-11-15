@@ -29,10 +29,27 @@ def main():
         source=cv2.imread(args.image)
         if source is None: p.error('Could not open image')
     else:
-        cap=cv2.VideoCapture(args.camera)
-        if not cap.isOpened(): p.error(f'Cannot open camera {args.camera}')
-        ok,source=cap.read()
-        if not ok: p.error('Cannot read webcam')
+           # Open webcam (Windows)
+    cap = cv2.VideoCapture(args.camera, cv2.CAP_DSHOW)
+
+    if not cap.isOpened():
+        p.error(f'Cannot open camera {args.camera}')
+
+    # Set webcam resolution to 1080p
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
+    # Set frame rate
+    cap.set(cv2.CAP_PROP_FPS, 30)
+
+    # Display actual webcam settings
+    print("Camera Width:", cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    print("Camera Height:", cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    print("Camera FPS:", cap.get(cv2.CAP_PROP_FPS))
+
+    ok, source = cap.read()
+    if not ok:
+        p.error('Cannot read webcam')
     size=(source.shape[1],source.shape[0])
     H=None
     calpath=Path(args.calibration)
