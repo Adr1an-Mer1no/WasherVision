@@ -1,5 +1,5 @@
 /* WasherVision: Arduino Uno + CNC Shield V3
-   Manual joystick, NC endstops, serial diagnostics.
+   Manual joystick, NC endstops (X LEFT / Y BACK / Z DOWN), serial diagnostics.
    NO AUTOMATIC MOTION. No homing or calibrated position.
    Verify shield pinout and axis directions before motor power.
 */
@@ -138,13 +138,14 @@ void loop() {
     if (y>JOY_HIGH) { axis=1; towardLimit=true; magnitude=y-JOY_HIGH; }
     else if (y<JOY_LOW) { axis=1; towardLimit=false; magnitude=JOY_LOW-y; }
   } else {
-    if (x>JOY_HIGH) { axis=0; towardLimit=true; magnitude=x-JOY_HIGH; }
-    else if (x<JOY_LOW) { axis=0; towardLimit=false; magnitude=JOY_LOW-x; }
+    if (x>JOY_HIGH) { axis=0; towardLimit=false; magnitude=x-JOY_HIGH; }
+    else if (x<JOY_LOW) { axis=0; towardLimit=true; magnitude=JOY_LOW-x; }
   }
   if (axis<0) { lastAxis=-1; return; }
   // Original joystick mapping: X right HIGH, Y backward LOW, Z down HIGH.
-  // Y backward is LOW on the DIR pin, unlike X right and Z down.
-  bool directionHigh=(axis==1) ? !towardLimit : towardLimit;
+  // Limits: X LEFT, Y BACKWARD, Z DOWN.
+  // X left and Y backward use LOW; Z down uses HIGH.
+  bool directionHigh=(axis==2) ? towardLimit : !towardLimit;
   uint8_t limitPin=axis==0?LIMIT_X:(axis==1?LIMIT_Y:LIMIT_Z);
   if (towardLimit && limitOpen(limitPin)) { lastAxis=-1; return; }
   digitalWrite(ENABLE_PIN,LOW);
