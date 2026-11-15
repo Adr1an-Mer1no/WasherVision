@@ -145,7 +145,11 @@ void loop() {
   // Original joystick mapping: X right HIGH, Y backward LOW, Z down HIGH.
   // Limits: X LEFT, Y BACKWARD, Z DOWN.
   // X left and Y backward use LOW; Z down uses HIGH.
-  bool directionHigh=(axis==2) ? towardLimit : !towardLimit;
+  // Explicit motor directions: X left LOW, Y backward LOW, Z down HIGH.
+  bool directionHigh;
+  if (axis==0) directionHigh = !towardLimit; // X left limit blocks LOW
+  else if (axis==1) directionHigh = !towardLimit; // Y backward limit blocks LOW
+  else directionHigh = towardLimit; // Z bottom limit blocks HIGH
   uint8_t limitPin=axis==0?LIMIT_X:(axis==1?LIMIT_Y:LIMIT_Z);
   if (towardLimit && limitOpen(limitPin)) { lastAxis=-1; return; }
   digitalWrite(ENABLE_PIN,LOW);
