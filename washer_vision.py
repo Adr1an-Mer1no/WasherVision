@@ -85,7 +85,7 @@ def main():
                 cv2.putText(display,'Click TL, TR, BR, BL of physical calibration rectangle',
                             (12,28),cv2.FONT_HERSHEY_SIMPLEX,.55,(0,255,255),2)
             else:
-                result=model.predict(frame,conf=args.confidence,verbose=False)[0]
+                result=model.predict(frame,conf=args.confidence,imgsz=960,verbose=False)[0]
                 if result.boxes is not None:
                     boxes=result.boxes.xyxy.cpu().numpy().tolist()
                     clsids=result.boxes.cls.cpu().numpy().astype(int).tolist()
