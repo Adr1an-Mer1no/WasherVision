@@ -1,8 +1,0 @@
-__pycache__/
-.pytest_cache/
-*.py[cod]
-calibration.json
-washer_coordinates.csv
-runs/
-.env
-.DS_Store
